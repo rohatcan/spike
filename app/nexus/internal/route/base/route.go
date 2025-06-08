@@ -70,6 +70,8 @@ func Route(
 				return policy.RouteDeletePolicy
 			case a == url.ActionList && p == url.SpikeNexusUrlPolicy:
 				return policy.RouteListPolicies
+			case a == url.ActionListBySpiffeId && p == url.SpikeNexusUrlPolicy:
+				return policy.RouteListPoliciesBySpiffeId
 			case a == url.ActionGet && p == url.SpikeNexusUrlSecretsMetadata:
 				return secret.RouteGetSecretMetadata
 			case a == url.ActionDefault && p == url.SpikeNexusUrlOperatorRestore:

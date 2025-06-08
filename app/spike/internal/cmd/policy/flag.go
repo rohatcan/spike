@@ -25,3 +25,13 @@ func addNameFlag(cmd *cobra.Command) {
 	cmd.Flags().String("name", "",
 		"Policy name to look up (alternative to policy ID)")
 }
+
+// addSpiffeIdFlag adds a spiffeId flag to the given command to allow specifying
+// a policy by exact SPIFFE ID pattern.
+//
+// Parameters:
+//   - cmd: The Cobra command to add the flag to
+func addSpiffeIdFlag(cmd *cobra.Command) {
+	cmd.Flags().String("spiffeId", "",
+		"Filter policies by SPIFFE ID pattern")
+}

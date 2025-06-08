@@ -6,6 +6,7 @@ package policy
 
 import (
 	"fmt"
+	"github.com/spiffe/spike-sdk-go/api/entity/data"
 
 	"github.com/spf13/cobra"
 	"github.com/spiffe/go-spiffe/v2/workloadapi"
@@ -28,15 +29,17 @@ import (
 //
 // Command usage:
 //
-//	list [--format=<format>]
+//	list [--format=<format>] [--spiffeId=<pattern>]
 //
 // Flags:
 //   - --format: Output format ("human" or "json", default is "human")
+//   - --spiffeId: Filter policies by exact SPIFFE ID pattern
 //
 // Example usage:
 //
 //	spike policy list
 //	spike policy list --format=json
+//	spike policy list --spiffeId="spiffe://example.org/web-service/*"
 //
 // Example output for human format:
 //
@@ -91,7 +94,17 @@ func newPolicyListCommand(
 			trust.Authenticate(spiffeId)
 			api := spike.NewWithSource(source)
 
-			policies, err := api.ListPolicies()
+			spiffeIdFlag, _ := cmd.Flags().GetString("spiffeId")
+
+			var policies *[]data.Policy
+			var err error
+			switch {
+			case spiffeIdFlag != "":
+				policies, err = api.ListPoliciesBySpiffeId(spiffeIdFlag)
+			default:
+				policies, err = api.ListPolicies()
+			}
+
 			if handleAPIError(err) {
 				return
 			}
@@ -102,5 +115,6 @@ func newPolicyListCommand(
 	}
 
 	addFormatFlag(cmd)
+	addSpiffeIdFlag(cmd)
 	return cmd
 }
